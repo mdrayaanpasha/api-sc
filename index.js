@@ -675,3 +675,82 @@ app.get("/cancelGet",async(req,res)=>{
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+
+
+app.post("/orderFromCart",async(req,res)=>{
+    /*
+    -fetch info from userModel via his Email
+    - post everything inside this model:
+    const s = await DashBoardModel.create(Da); in this model, for which it expects something like this:
+    {
+    'Costumer Name': String,
+    'Costumer Email': String,
+    'Costumer Phone': Number,
+    'Costumer Adress' : String,
+    'Costumer Id': String,
+    'Product Name': String,
+    'Product Price': Number,
+    'Product Sku': String,
+    'Product Type':String,
+    'Product Sub-Type':String,
+    'Product Quantity':Number,
+    'Order Date': {
+        type: Date,
+        default: Date.now, 
+    },
+    'Admin':Boolean,  //this must be set to true
+
+}
+    - you have skus in an array of, and you also have their quantities, so loop that many times and store it in dash board!
+
+    */
+    const UserEmail = req.body.Data.Email;
+    const ClientInfo= req.body.Data;
+   
+ 
+    const OrderData = []
+
+   
+    try {
+        const userInfo = await userModel.findOne({"email":UserEmail})
+        ClientInfo.ProductData.forEach(ele=>{
+            
+            let Data = {
+                'Costumer Name': userInfo.name,
+        'Costumer Email': userInfo.email,
+        'Costumer Phone': userInfo.phoneNo,
+        'Costumer Adress' : userInfo.Adress,
+        'Costumer Id': userInfo._id.toString(),
+        'Product Name': ele.Title,
+        'Product Price': ele["Selling Price "],
+        'Product Sku': ele["Sku"],
+        'Product Type':ele['Product Category'],
+        'Product Sub-Type':ele['Sub Category'],
+        'Product Quantity':ClientInfo.quantities[ele["Sku"]],
+        'Order Date': new Date(),
+        'Admin':true,
+            } 
+            if(ClientInfo.quantities[ele["Sku"]]){
+                OrderData.push(Data)
+            }
+            
+        })
+        
+   
+    } catch (error) {
+        console.log(error)
+        res.send({mesage:"failed"})
+    }
+
+    try {
+        for (const ele of OrderData) {
+            await DashBoardModel.create(ele); // Create entry for each order data
+        }
+        await cartModel.deleteOne({Email:UserEmail})
+        console.log("check now!")
+    } catch (error) {
+       console.log(error) 
+    }
+    
+})
+

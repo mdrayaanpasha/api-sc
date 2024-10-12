@@ -12,6 +12,7 @@ const orderSchema = new mongoose.Schema({
     'Product Sku': String,
     'Product Type':String,
     'Product Sub-Type':String,
+    'Product Quantity':Number,
     'Order Date': {
         type: Date,
         default: Date.now, 
