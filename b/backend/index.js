@@ -190,7 +190,7 @@ app.post("/reg",async(req,res)=>{
     try {
         const d = await userModel.find({email:req.body.email})
         if(d.length > 0){
-            console.log("userThere")
+            res.send({message:"there"})
         }else{
             const randomNumber = Math.floor(1000 + Math.random() * 9000);
             const transporter = nodemailer.createTransport({
@@ -216,7 +216,7 @@ app.post("/reg",async(req,res)=>{
               return res.status(500).send("Failed to send email.");
             }
       
-            res.send({otp: randomNumber });
+            res.send({otp: randomNumber,message:"notthere" });
           }
         } catch (error) {
           console.error("Error occurred:", error);
