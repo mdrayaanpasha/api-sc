@@ -124,7 +124,6 @@ app.post("/sofaimg", async (req, res) => {
 
     try {
         data = await SofaModel.find({Sku:folderName});
-        console.log("this is data: ",data)
     } catch (error) {
         console.log(error)
         res.send({message:"there is an error in backend"})
@@ -155,7 +154,7 @@ app.post("/sofaimg", async (req, res) => {
 app.post("/otherGetData",async(req,res)=>{
     const subcat = req.body.PC;
     const cat = req.body.Product;
-    // console.log(cat,subcat)
+
 
     try {
         if(cat==="Sofa"){
@@ -204,13 +203,23 @@ app.post("/reg",async(req,res)=>{
             });
       
             try {
-              const info = await transporter.sendMail({
-                from: "Email Authenticator <your_gmail_address@gmail.com>",
-                to: req.body.email,
-                subject: "OTP For Verification!!",
-                text: "Hello world!",
-                html: `<p>Here is your OTP: <b>${randomNumber}</b></p>`,
-              });
+                const info = await transporter.sendMail({
+                    from: "Solace Craft <noreply@solacecraft.com>",
+                    to: req.body.email,
+                    subject: "Welcome to Solace Craft - Your Registration OTP",
+                    text: "Dear Valued User,",
+                    html: `
+                      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2>Welcome to Solace Craft!</h2>
+                        <p>Thank you for choosing Solace Craft for your journey. We are thrilled to have you on board!</p>
+                        <p>Your One-Time Password (OTP) for registration is:</p>
+                        <h3 style="color: #007BFF;"><b>${randomNumber}</b></h3>
+                        <p>Please use this OTP to complete your registration. If you did not request this, please ignore this email.</p>
+                        <p>Best Regards,<br>The Solace Craft Team</p>
+                      </div>
+                    `,
+                  });
+                  
             } catch (error) {
               console.error("Error occurred:", error);
               return res.status(500).send("Failed to send email.");
@@ -244,7 +253,7 @@ app.post("/login",async(req,res)=>{
     const E =req.body.Email
 
     const P = req.body.Password
-    console.log(E,P)
+   
     try {
         const data = await userModel.find({email:E});
         if(data.length > 0){
@@ -321,7 +330,7 @@ app.post("/CartGet",async(req,res)=>{
     try {
         const D = await cartModel.find({Email:E})
         res.send({message:"ok",Da:D[0]})
-        console.log(D);
+    
     } catch (error) {
         res.send({message:"notok"})
         console.log(error)
@@ -414,7 +423,7 @@ app.get("/ShoeRacksget",async(req,res)=>{
 app.post('/SRget', async (req, res) => {
     const folderName = req.body.Sku;
 let data;
-console.log(folderName)
+
 try {
     data = await ShoeRackModel.findOne({ Sku: folderName });
     console.log(data)
@@ -446,7 +455,7 @@ const filePaths = [];
             }
         });
 
-        // console.log(filePaths);
+    
 
         
     });
@@ -497,7 +506,7 @@ app.get("/cabSRget",async(req,res)=>{
 app.post("/cartUpdate",async(req,res)=>{
     const email = req.body.Email
     const sku = req.body.Arr
-    console.log(email,sku)
+  
     try {
         await cartModel.updateOne(
             { Email: email },
@@ -550,7 +559,7 @@ app.get("/randomspotlights",async(req,res)=>{
 
 app.post("/EnterDash", async (req, res) => {
     const Da = req.body.D;
-    console.log(Da);
+ 
     try {
         const s = await DashBoardModel.create(Da);
         res.send({ message: true, id:s._id });
@@ -643,7 +652,6 @@ app.post("/cancelorder", async (req, res) => {
     }
 
     data.Admin = true;
-    console.log(data)
 
     try {
         
