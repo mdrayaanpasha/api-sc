@@ -11,16 +11,19 @@ import { ppid } from "process";
 
 import mongoose from "mongoose";
 import { Server } from "http"; // Import Server from "http" module
+import dotenv from 'dotenv';
+
+
 //middle WArE:
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+dotenv.config();
 
 
 //this is mongo stuff!
 
-const dburl = "mongodb+srv://mohdrayaanpasha:Abc1543786290@cluster0.rtpe7lh.mongodb.net/SolaceCraft?retryWrites=true&w=majority";
+const dburl =process.env.MONGO_URI;
 
 const connectionParams = {
     useNewUrlParser:true,
